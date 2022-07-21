@@ -1,15 +1,18 @@
 const inquirer = require('inquirer');
+// const fs = require('fs');
+// const generatePage = require('./src/page-template');
+
 
 const promptProject = portfolioData => {
   // If there's no 'projects' array property, create one
-  if (!portfolioData.projects) {
-    portfolioData.projects = [];
-  }
+if (!portfolioData.projects) {
+  portfolioData.projects = [];
+}
   console.log(`
-    =================
-    Add a New Project
-    =================
-  `);
+=================
+Add a New Project
+=================
+`);
   return inquirer.prompt([
     {
       type: 'input',
@@ -44,16 +47,18 @@ const promptProject = portfolioData => {
       message: 'Would you like to enter another project?',
       default: false
     }
-    .then(projectData => {
-      portfolioData.projects.push(projectData);
-      if (projectData.confirmAddProject) {
-        return promptProject(portfolioData);
-      } else {
-        return portfolioData;
-      }
-    })
-  ]);
-  
+  ])
+  .then(projectData => {
+    portfolioData.projects.push(projectData);
+  })
+  .then(projectData => {
+    portfolioData.projects.push(projectData);
+    if (projectData.confirmAddProject) {
+      return promptProject(portfolioData);
+    } else {
+      return portfolioData;
+    }
+  });
 };
 
 const promptUser = () => {
@@ -77,10 +82,10 @@ const promptUser = () => {
 };
 
 promptUser()
-  .then(answers => console.log(answers))
   .then(promptProject)
-  .then(projectAnswers => console.log(projectAnswers));
-
+  .then(portfolioData => {
+    console.log(portfolioData);
+  });
 
 // const fs = require('fs');
 // const generatePage = require('./src/page-template');
