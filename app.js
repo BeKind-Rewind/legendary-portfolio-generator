@@ -1,19 +1,20 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
 const generatePage = require('./src/page-template');
-const { projects, about, ...header } = templateData;
 
 
 const promptProject = portfolioData => {
-  // If there's no 'projects' array property, create one
-if (!portfolioData.projects) {
-  portfolioData.projects = [];
-}
+  
   console.log(`
-=================
-Add a New Project
-=================
-`);
+    =================
+    Add a New Project
+    =================
+  `);
+
+  // If there's no 'projects' array property, create one
+  if (!portfolioData.projects) {
+    portfolioData.projects = [];
+  }
   return inquirer.prompt([
     {
       type: 'input',
@@ -134,25 +135,16 @@ const promptUser = () => {
   ]);
 };
 
-const mockData = {
-  name: 'Lernantino',
-  github: 'lernantino',
-  projects: []
-}
+
+promptUser()
+  .then(promptProject)
+  .then(portfolioData => {
+    const pageHTML = generatePage(portfolioData);
 
 
-// temporary replacement for PromptUser Call
-const pageHTML = generatePage(mockData);
+    fs.writeFile('./index.html', pageHTML, err => {
+      if (err) throw new Error(err);
 
-// promptUser()
-//   .then(promptProject)
-//   .then(portfolioData => {
-//     const pageHTML = generatePage(portfolioData);
-
-
-    // fs.writeFile('./index.html', pageHTML, err => {
-    //   if (err) throw new Error(err);
-
-    //   console.log('Page created! Check out index.html in this directory to see it!');
-    // });
-  // });
+      console.log('Page created! Check out index.html in this directory to see it!');
+    });
+  });
